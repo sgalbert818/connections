@@ -34,6 +34,7 @@ let gameContent = [
 ]
 
 let boxes = document.querySelectorAll('.box');
+let selected = [];
 
 function setUpGame() {
     let gameWords = [];
@@ -53,5 +54,28 @@ function setUpGame() {
         boxes[i].textContent = gameWords[i];
     }
 };
+
+function checkForMatches() {
+    console.log(selected.sort());
+    console.log(gameContent[0].words.sort());
+    if (selected.sort() === gameContent[0].words.sort()) {
+        console.log('match');
+    }
+    /*for (let k=0; k<gameContent.length; k++) {
+        if (selected.sort() == gameContent[k].words.sort()) {
+            console.log('match detected');
+        }
+    }*/
+}
+
+boxes.forEach((box) => {
+    box.addEventListener('click', function() {
+        box.style.border = '1px solid red';
+        selected.push(box.textContent);
+        if (selected.length == 4) {
+            checkForMatches();
+        }
+    })
+})
 
 setUpGame();
