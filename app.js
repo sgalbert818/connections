@@ -35,14 +35,16 @@ let gameContent = [
 
 let boxes = document.querySelectorAll('.box');
 let groups = document.querySelectorAll('.group');
+const shuffle = document.getElementById('shuffle');
+const clear = document.getElementById('clear');
 let selected = [];
 let gameWords = [];
 let correctCounter = 0;
 let checkAgainstIndex;
+let findIndex;
 
 function setUpGame() {
     let preventRepeats = Array.from(Array(gameContent.length), (_, x) => x);
-
     for (let i = 0; i < 4; i++) {
         let randInt = Math.floor(Math.random() * preventRepeats.length)
         let chosenWordsIndex = preventRepeats[randInt];
@@ -74,12 +76,18 @@ boxes.forEach((box) => {
 })
 
 function checkForMatches() {
-    let matchCounter = 0;
-    for (let k=0; k<gameContent.length; k++) {
-        if (gameContent[k].words.includes(selected.sort()[0]) == true) {
-            checkAgainstIndex = k;
+    for (let i=0; i<gameContent.length; i++) {
+        findIndex = 0;
+        for (let j=0; j<selected.length; j++) {
+            if (gameContent[i].words.includes(selected[j]) == true) {
+                findIndex++
+            }
+        }
+        if (findIndex > 2) {
+            checkAgainstIndex = i;
         }
     }
+    let matchCounter = 0;
     for (let l=0; l<selected.length; l++) {
         if (gameContent[checkAgainstIndex].words.includes(selected[l])) {
             matchCounter += 1;
@@ -119,5 +127,19 @@ function redistributeWords() {
 
     correctCounter++;
 }
+
+shuffle.addEventListener('click', function() {
+    selected = [];
+    for (let i=gameWords.length-1; i>0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let temp = gameWords[i];
+        gameWords[i] = gameWords[j];
+        gameWords[j] = temp;
+    }
+    for (n=0; n<gameWords.length; n++) {
+        boxes[n + (16-gameWords.length)].textContent = gameWords[n];
+        resetBoxes();
+    }
+})
 
 setUpGame();
