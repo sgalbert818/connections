@@ -34,10 +34,15 @@ let gameContent = [
 ]
 
 let boxes = document.querySelectorAll('.box');
+let group1 = document.querySelector('.group-1');
+let group2 = document.querySelector('.group-2');
+let group3 = document.querySelector('.group-3');
+let group4 = document.querySelector('.group-4');
 let selected = [];
+let gameWords = [];
+let checkAgainstIndex;
 
 function setUpGame() {
-    let gameWords = [];
     let preventRepeats = Array.from(Array(gameContent.length), (_, x) => x);
 
     for (let i = 0; i < 4; i++) {
@@ -55,27 +60,58 @@ function setUpGame() {
     }
 };
 
-function checkForMatches() {
-    console.log(selected.sort());
-    console.log(gameContent[0].words.sort());
-    if (selected.sort() === gameContent[0].words.sort()) {
-        console.log('match');
-    }
-    /*for (let k=0; k<gameContent.length; k++) {
-        if (selected.sort() == gameContent[k].words.sort()) {
-            console.log('match detected');
-        }
-    }*/
-}
-
 boxes.forEach((box) => {
     box.addEventListener('click', function() {
-        box.style.border = '1px solid red';
-        selected.push(box.textContent);
-        if (selected.length == 4) {
-            checkForMatches();
+        if (box.style.border == '1px solid red') {
+            box.style.border = '1px solid green';
+            selected.splice(selected.indexOf(box.textContent), 1);
+        } else {
+            box.style.border = '1px solid red';
+            selected.push(box.textContent);
+            if (selected.length == 4) {
+                checkForMatches();
+            }
         }
     })
 })
+
+function checkForMatches() {
+    let matchCounter = 0;
+    for (let k=0; k<gameContent.length; k++) {
+        if (gameContent[k].words.includes(selected.sort()[0]) == true) {
+            checkAgainstIndex = k;
+        }
+    }
+    for (let l=0; l<selected.length; l++) {
+        if (selected.sort()[l] == gameContent[checkAgainstIndex].words.sort()[l]) {
+            matchCounter += 1;
+        }
+    }
+    if (matchCounter == 4) {
+        selected.forEach((word) => {
+            let removalIndex = gameWords.indexOf(word);
+            gameWords.splice(removalIndex, 1);
+        })
+        selected = [];
+        resetBoxes();
+        redistributeWords();
+    } else {
+        selected = [];
+        resetBoxes();
+    }
+}
+
+function resetBoxes() {
+    boxes.forEach((box) => {
+        box.style.border = '1px solid green';
+    })
+}
+
+function redistributeWords() {
+    group1.innerHTML = `<div class="correct-answer">
+    <h3>Category: ${gameContent[checkAgainstIndex].category}</h3>
+    <h5>${gameContent[checkAgainstIndex].words.toString().replaceAll(',', ', ')}</h5>
+    </div>`
+}
 
 setUpGame();
