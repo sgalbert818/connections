@@ -36,8 +36,8 @@
 
 .correct-answer {
     border: 2px solid blue;
-    width: 98%;
-    height: 98%;
+    width: 99%;
+    min-height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: center;

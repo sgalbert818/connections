@@ -34,12 +34,10 @@ let gameContent = [
 ]
 
 let boxes = document.querySelectorAll('.box');
-let group1 = document.querySelector('.group-1');
-let group2 = document.querySelector('.group-2');
-let group3 = document.querySelector('.group-3');
-let group4 = document.querySelector('.group-4');
+let groups = document.querySelectorAll('.group');
 let selected = [];
 let gameWords = [];
+let correctCounter = 0;
 let checkAgainstIndex;
 
 function setUpGame() {
@@ -83,7 +81,7 @@ function checkForMatches() {
         }
     }
     for (let l=0; l<selected.length; l++) {
-        if (selected.sort()[l] == gameContent[checkAgainstIndex].words.sort()[l]) {
+        if (gameContent[checkAgainstIndex].words.includes(selected[l])) {
             matchCounter += 1;
         }
     }
@@ -95,6 +93,8 @@ function checkForMatches() {
         selected = [];
         resetBoxes();
         redistributeWords();
+    } else if (matchCounter == 3) {
+        console.log('one away...');
     } else {
         selected = [];
         resetBoxes();
@@ -108,10 +108,16 @@ function resetBoxes() {
 }
 
 function redistributeWords() {
-    group1.innerHTML = `<div class="correct-answer">
+    groups[correctCounter].innerHTML = `<div class="correct-answer">
     <h3>Category: ${gameContent[checkAgainstIndex].category}</h3>
     <h5>${gameContent[checkAgainstIndex].words.toString().replaceAll(',', ', ')}</h5>
     </div>`
+
+    for (n=0; n<gameWords.length; n++) {
+        boxes[n+((correctCounter+1)*4)].textContent = gameWords[n];
+    }
+
+    correctCounter++;
 }
 
 setUpGame();
