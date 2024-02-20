@@ -36,6 +36,7 @@ let gameContent = [
 let boxes = document.querySelectorAll('.box');
 let groups = document.querySelectorAll('.group');
 const shuffle = document.getElementById('shuffle');
+const clear = document.getElementById('clear');
 const submit = document.getElementById('submit');
 const remainingBox = document.querySelector('.remaining-guesses');
 const oneAway = document.querySelector('.one-away');
@@ -76,13 +77,11 @@ boxes.forEach((box) => {
         }
         if (selected.length == 4) {
             submit.disabled = false;
-            console.log(selected);
         }
         if (selected.length > 4) {
             box.style.border = '1px solid green';
             selected.splice(selected.indexOf(box.textContent), 1);
         }
-        console.log(selected);
     })
 })
 
@@ -172,6 +171,13 @@ shuffle.addEventListener('click', function() {
 
 submit.addEventListener('click', function() {
     checkForMatches();
+})
+
+clear.addEventListener('click', function() {
+    selected = [];
+    boxes.forEach((box) => {
+        box.style.border = '1px solid green';
+    })
 })
 
 setUpGame();
