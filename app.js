@@ -1,3 +1,5 @@
+// make it so that user cannot guess the same combination twice
+
 let gameContent = [
     {
         words: ['Brain', 'Prune', 'Pug', 'Walnut'],
@@ -40,11 +42,12 @@ const clear = document.getElementById('clear');
 const submit = document.getElementById('submit');
 const remainingBox = document.querySelector('.remaining-guesses');
 const oneAway = document.querySelector('.one-away');
+let alreadyChosenCombos = [];
 let selected = [];
 let gameWords = [];
 let remainingGuesses = 4;
 let correctCounter = 0;
-let checkAgainstIndex;
+let checkAgainstIndex = 0;
 let findIndex;
 
 function setUpGame() {
@@ -59,14 +62,14 @@ function setUpGame() {
             gameWords.splice(spliceIndex, 0, gameContent[chosenWordsIndex].words[j])
         }
     }
-    for (i=0; i<boxes.length; i++) {
+    for (i = 0; i < boxes.length; i++) {
         boxes[i].textContent = gameWords[i];
     }
     remainingBox.textContent = `Guesses remaining: ${remainingGuesses}`
 };
 
 boxes.forEach((box) => {
-    box.addEventListener('click', function() {
+    box.addEventListener('click', function () {
         if (box.style.border == '1px solid red') {
             box.style.border = '1px solid green';
             selected.splice(selected.indexOf(box.textContent), 1);
@@ -86,9 +89,9 @@ boxes.forEach((box) => {
 })
 
 function checkForMatches() {
-    for (let i=0; i<gameContent.length; i++) {
+    for (let i = 0; i < gameContent.length; i++) {
         findIndex = 0;
-        for (let j=0; j<selected.length; j++) {
+        for (let j = 0; j < selected.length; j++) {
             if (gameContent[i].words.includes(selected[j]) == true) {
                 findIndex++
             }
@@ -98,7 +101,7 @@ function checkForMatches() {
         }
     }
     let matchCounter = 0;
-    for (let l=0; l<selected.length; l++) {
+    for (let l = 0; l < selected.length; l++) {
         if (gameContent[checkAgainstIndex].words.includes(selected[l]) == true) {
             matchCounter += 1;
         }
@@ -115,7 +118,7 @@ function checkForMatches() {
         oneAway.textContent = 'One away!'
         setTimeout(() => {
             oneAway.textContent = '';
-          }, "2000");
+        }, "2000");
         incorrectGuess();
     } else {
         selected = [];
@@ -123,6 +126,7 @@ function checkForMatches() {
         resetBoxes();
     }
 }
+
 
 function incorrectGuess() {
     submit.disabled = true;
@@ -146,34 +150,35 @@ function redistributeWords() {
     <h3>Category: ${gameContent[checkAgainstIndex].category}</h3>
     <h5>${gameContent[checkAgainstIndex].words.toString().replaceAll(',', ', ')}</h5>
     </div>`
-    for (n=0; n<gameWords.length; n++) {
-        boxes[n+((correctCounter+1)*4)].textContent = gameWords[n];
+    for (n = 0; n < gameWords.length; n++) {
+        boxes[n + ((correctCounter + 1) * 4)].textContent = gameWords[n];
     }
     correctCounter++;
+    submit.disabled = 'true';
     if (correctCounter == 4) {
         remainingBox.textContent = 'Congratulations! Refresh the page to play again.'
     }
 }
 
-shuffle.addEventListener('click', function() {
+shuffle.addEventListener('click', function () {
     selected = [];
-    for (let i=gameWords.length-1; i>0; i--) {
+    for (let i = gameWords.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         let temp = gameWords[i];
         gameWords[i] = gameWords[j];
         gameWords[j] = temp;
     }
-    for (n=0; n<gameWords.length; n++) {
-        boxes[n + (16-gameWords.length)].textContent = gameWords[n];
+    for (n = 0; n < gameWords.length; n++) {
+        boxes[n + (16 - gameWords.length)].textContent = gameWords[n];
         resetBoxes();
     }
 })
 
-submit.addEventListener('click', function() {
+submit.addEventListener('click', function () {
     checkForMatches();
 })
 
-clear.addEventListener('click', function() {
+clear.addEventListener('click', function () {
     selected = [];
     boxes.forEach((box) => {
         box.style.border = '1px solid green';
