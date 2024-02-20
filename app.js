@@ -1,5 +1,3 @@
-// need to make it so that user cannot select more thna 4 elements at once
-
 let gameContent = [
     {
         words: ['Brain', 'Prune', 'Pug', 'Walnut'],
@@ -38,9 +36,9 @@ let gameContent = [
 let boxes = document.querySelectorAll('.box');
 let groups = document.querySelectorAll('.group');
 const shuffle = document.getElementById('shuffle');
-//const clear = document.getElementById('clear');
 const submit = document.getElementById('submit');
 const remainingBox = document.querySelector('.remaining-guesses');
+const oneAway = document.querySelector('.one-away');
 let selected = [];
 let gameWords = [];
 let remainingGuesses = 4;
@@ -60,11 +58,9 @@ function setUpGame() {
             gameWords.splice(spliceIndex, 0, gameContent[chosenWordsIndex].words[j])
         }
     }
-
     for (i=0; i<boxes.length; i++) {
         boxes[i].textContent = gameWords[i];
     }
-
     remainingBox.textContent = `Guesses remaining: ${remainingGuesses}`
 };
 
@@ -73,13 +69,20 @@ boxes.forEach((box) => {
         if (box.style.border == '1px solid red') {
             box.style.border = '1px solid green';
             selected.splice(selected.indexOf(box.textContent), 1);
+            submit.disabled = true;
         } else {
             box.style.border = '1px solid red';
             selected.push(box.textContent);
-            if (selected.length == 4) {
-                submit.disabled = false;
-            }
         }
+        if (selected.length == 4) {
+            submit.disabled = false;
+            console.log(selected);
+        }
+        if (selected.length > 4) {
+            box.style.border = '1px solid green';
+            selected.splice(selected.indexOf(box.textContent), 1);
+        }
+        console.log(selected);
     })
 })
 
@@ -110,7 +113,10 @@ function checkForMatches() {
         resetBoxes();
         redistributeWords();
     } else if (matchCounter == 3) {
-        console.log('one away...');
+        oneAway.textContent = 'One away!'
+        setTimeout(() => {
+            oneAway.textContent = '';
+          }, "2000");
         incorrectGuess();
     } else {
         selected = [];
@@ -141,12 +147,13 @@ function redistributeWords() {
     <h3>Category: ${gameContent[checkAgainstIndex].category}</h3>
     <h5>${gameContent[checkAgainstIndex].words.toString().replaceAll(',', ', ')}</h5>
     </div>`
-
     for (n=0; n<gameWords.length; n++) {
         boxes[n+((correctCounter+1)*4)].textContent = gameWords[n];
     }
-
     correctCounter++;
+    if (correctCounter == 4) {
+        remainingBox.textContent = 'Congratulations! Refresh the page to play again.'
+    }
 }
 
 shuffle.addEventListener('click', function() {
