@@ -35,6 +35,10 @@
     border: 1px solid green;
 }
 
+.remaining-guesses {
+    margin: 20px 0 0 0;
+}
+
 .buttons-box {
     margin: 20px 0;
 }

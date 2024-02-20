@@ -1,3 +1,5 @@
+// need to make it so that user cannot select more thna 4 elements at once
+
 let gameContent = [
     {
         words: ['Brain', 'Prune', 'Pug', 'Walnut'],
@@ -36,14 +38,18 @@ let gameContent = [
 let boxes = document.querySelectorAll('.box');
 let groups = document.querySelectorAll('.group');
 const shuffle = document.getElementById('shuffle');
-const clear = document.getElementById('clear');
+//const clear = document.getElementById('clear');
+const submit = document.getElementById('submit');
+const remainingBox = document.querySelector('.remaining-guesses');
 let selected = [];
 let gameWords = [];
+let remainingGuesses = 4;
 let correctCounter = 0;
 let checkAgainstIndex;
 let findIndex;
 
 function setUpGame() {
+    shuffle.disabled = false;
     let preventRepeats = Array.from(Array(gameContent.length), (_, x) => x);
     for (let i = 0; i < 4; i++) {
         let randInt = Math.floor(Math.random() * preventRepeats.length)
@@ -58,6 +64,8 @@ function setUpGame() {
     for (i=0; i<boxes.length; i++) {
         boxes[i].textContent = gameWords[i];
     }
+
+    remainingBox.textContent = `Guesses remaining: ${remainingGuesses}`
 };
 
 boxes.forEach((box) => {
@@ -69,7 +77,7 @@ boxes.forEach((box) => {
             box.style.border = '1px solid red';
             selected.push(box.textContent);
             if (selected.length == 4) {
-                checkForMatches();
+                submit.disabled = false;
             }
         }
     })
@@ -89,7 +97,7 @@ function checkForMatches() {
     }
     let matchCounter = 0;
     for (let l=0; l<selected.length; l++) {
-        if (gameContent[checkAgainstIndex].words.includes(selected[l])) {
+        if (gameContent[checkAgainstIndex].words.includes(selected[l]) == true) {
             matchCounter += 1;
         }
     }
@@ -103,9 +111,22 @@ function checkForMatches() {
         redistributeWords();
     } else if (matchCounter == 3) {
         console.log('one away...');
+        incorrectGuess();
     } else {
         selected = [];
+        incorrectGuess();
         resetBoxes();
+    }
+}
+
+function incorrectGuess() {
+    submit.disabled = true;
+    remainingGuesses--;
+    if (remainingGuesses == 0) {
+        remainingBox.textContent = `Sorry, you have no guesses left. Refresh the page to play again.`;
+        shuffle.disabled = true;
+    } else {
+        remainingBox.textContent = `Guesses remaining: ${remainingGuesses}`;
     }
 }
 
@@ -140,6 +161,10 @@ shuffle.addEventListener('click', function() {
         boxes[n + (16-gameWords.length)].textContent = gameWords[n];
         resetBoxes();
     }
+})
+
+submit.addEventListener('click', function() {
+    checkForMatches();
 })
 
 setUpGame();
