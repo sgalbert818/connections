@@ -1,4 +1,5 @@
-// make it so that user cannot guess the same combination twice
+// var(--light-grey) border = background color var(--light-grey),text color black
+// var(--dark-grey) border = background color black text color white
 
 let gameContent = [
     {
@@ -42,7 +43,7 @@ const clear = document.getElementById('clear');
 const submit = document.getElementById('submit');
 const remainingBox = document.querySelector('.remaining-guesses');
 const oneAway = document.querySelector('.one-away');
-let alreadyChosenCombos = [];
+let alreadyGuessed = [];
 let selected = [];
 let gameWords = [];
 let remainingGuesses = 4;
@@ -70,21 +71,28 @@ function setUpGame() {
 
 boxes.forEach((box) => {
     box.addEventListener('click', function () {
-        if (box.style.border == '1px solid red') {
-            box.style.border = '1px solid green';
+        if (box.style.border == '1px solid var(--dark-grey)') {
+            box.style.border = '1px solid var(--light-grey)';
+            box.style.backgroundColor = 'var(--light-grey)';
+            box.style.color = 'black';
             selected.splice(selected.indexOf(box.textContent), 1);
             submit.disabled = true;
         } else {
-            box.style.border = '1px solid red';
+            box.style.border = '1px solid var(--dark-grey)';
+            box.style.backgroundColor = 'var(--dark-grey)';
+            box.style.color = 'white';
             selected.push(box.textContent);
         }
         if (selected.length == 4) {
             submit.disabled = false;
         }
         if (selected.length > 4) {
-            box.style.border = '1px solid green';
+            box.style.border = '1px solid var(--light-grey)';
+            box.style.backgroundColor = 'var(--light-grey)'
+            box.style.color = 'black';
             selected.splice(selected.indexOf(box.textContent), 1);
         }
+        console.log(selected);
     })
 })
 
@@ -115,11 +123,15 @@ function checkForMatches() {
         resetBoxes();
         redistributeWords();
     } else if (matchCounter == 3) {
-        oneAway.textContent = 'One away!'
-        setTimeout(() => {
-            oneAway.textContent = '';
-        }, "2000");
-        incorrectGuess();
+        if (remainingGuesses == 1) {
+            incorrectGuess()
+        } else {
+            oneAway.textContent = 'One away!'
+            setTimeout(() => {
+                oneAway.textContent = '';
+            }, "2000");
+            incorrectGuess();
+        }
     } else {
         selected = [];
         incorrectGuess();
@@ -141,13 +153,15 @@ function incorrectGuess() {
 
 function resetBoxes() {
     boxes.forEach((box) => {
-        box.style.border = '1px solid green';
+        box.style.border = '1px solid var(--light-grey)';
+        box.style.backgroundColor = 'var(--light-grey)'
+        box.style.color = 'black';
     })
 }
 
 function redistributeWords() {
-    groups[correctCounter].innerHTML = `<div class="correct-answer">
-    <h3>Category: ${gameContent[checkAgainstIndex].category}</h3>
+    groups[correctCounter].innerHTML = `<div class="correct-answer ca${correctCounter}">
+    <h3>${gameContent[checkAgainstIndex].category}</h3>
     <h5>${gameContent[checkAgainstIndex].words.toString().replaceAll(',', ', ')}</h5>
     </div>`
     for (n = 0; n < gameWords.length; n++) {
@@ -181,7 +195,9 @@ submit.addEventListener('click', function () {
 clear.addEventListener('click', function () {
     selected = [];
     boxes.forEach((box) => {
-        box.style.border = '1px solid green';
+        box.style.border = '1px solid var(--light-grey)';
+        box.style.backgroundColor = 'var(--light-grey)'
+        box.style.color = 'black';
     })
 })
 
