@@ -23,10 +23,6 @@ let gameContent = [
         category: '___wood',
     },
     {
-        words: ['Recess', 'Break', 'Leave', 'Holiday'],
-        category: 'Time off',
-    },
-    {
         words: ['Ink', 'Lack', 'Old', 'Range'],
         category: 'Colors minus their first letters',
     },
