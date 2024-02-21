@@ -34,6 +34,30 @@ let gameContent = [
         words: ['Fluffy', 'Rex', 'Rover', 'Spot'],
         category: 'Classic dog names',
     },
+    {
+        words: ['Fish', 'Goat', 'Scales', 'Twins'],
+        category: 'Zodiac Symbols',
+    },
+    {
+        words: ['Berry', 'Foster', 'Stone', 'Swank'],
+        category: 'Best actress oscar winners',
+    },
+    {
+        words: ['Fire', 'Lit', 'Sick', 'Tight'],
+        category: 'Cool in slang',
+    },
+    {
+        words: ['Break', 'Charm', 'Duck', 'Strike'],
+        category: 'Lucky ___',
+    },
+    {
+        words: ['Block', 'Match', 'Message', 'Swipe'],
+        category: 'Dating app actions',
+    },
+    {
+        words: ['Alley', 'Lane', 'Drive', 'Street'],
+        category: 'Road Names',
+    },
 ]
 
 let boxes = document.querySelectorAll('.box');
@@ -92,7 +116,6 @@ boxes.forEach((box) => {
             box.style.color = 'black';
             selected.splice(selected.indexOf(box.textContent), 1);
         }
-        console.log(selected);
     })
 })
 
