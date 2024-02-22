@@ -37,11 +37,10 @@ h5 {
 }
 
 .play-container {
-    width: 100%;
     height: auto;
     width: 70%;
     min-width: 300px;
-    margin-top: 15vh;
+    margin: 12vh 0 0 0;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.286);
     border-radius: 5px;
@@ -162,5 +161,9 @@ h5 {
     .remaining-guesses {
         width: 220px;
         text-align: center;
+    }
+
+    .play-container {
+        margin: 8vh 0 0 0;
     }
   }
